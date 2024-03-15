@@ -7,18 +7,74 @@ import AttachFile from '@mui/icons-material/AttachFile';
 import MoreVert from '@mui/icons-material/MoreVert';
 import InsertEmoticon from '@mui/icons-material/InsertEmoticon';
 import MicIcon from '@mui/icons-material/Mic';
+import { useParams } from 'react-router-dom';
+import db from '../firebase';
+import {
+  doc,
+  query,
+  orderBy,
+  onSnapshot,
+  collection,
+  Timestamp,
+  addDoc,
+} from 'firebase/firestore';
+import { useAuth } from './auth/AuthContext';
+
+type MessageType = {
+  id: string;
+  message: string;
+  name: string;
+  timestamp: Timestamp;
+};
 
 const Chat = () => {
-  const [seed, setSeed] = useState('');
   const [input, setInput] = useState('');
+  const { roomId } = useParams();
+  const [roomName, setRoomName] = useState('');
+  const [messages, setMessages] = useState<MessageType[]>([]);
+  const { user } = useAuth();
 
   useEffect(() => {
-    setSeed(Math.floor(Math.random() * 5000).toString());
-  }, []);
+    if (roomId) {
+      const unsubscribeRooms = onSnapshot(
+        doc(db, 'rooms', roomId),
+        (snapshot) => {
+          if (snapshot.exists()) {
+            setRoomName(snapshot.data().name);
+          }
+        }
+      );
+
+      const messagesRef = collection(db, 'rooms', roomId, 'messages');
+      const q = query(messagesRef, orderBy('timestamp', 'asc'));
+
+      const unsubscribeMessages = onSnapshot(q, (snapshot) => {
+        setMessages(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            message: doc.data().message,
+            name: doc.data().name,
+            timestamp: doc.data().timestamp,
+          }))
+        );
+      });
+
+      return () => {
+        unsubscribeRooms();
+        unsubscribeMessages();
+      };
+    }
+  }, [roomId]);
 
   const sendMessage = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    console.log('You typed >>>', input);
+    if (roomId) {
+      addDoc(collection(db, 'rooms', roomId, 'messages'), {
+        message: input,
+        name: user?.displayName,
+        timestamp: Timestamp.now(),
+      });
+    }
     setInput('');
   };
 
@@ -26,11 +82,16 @@ const Chat = () => {
     <div className="chat">
       <div className="chat__header">
         <Avatar
-          src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${seed}`}
+          src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${roomId}`}
         />
         <div className="chat__headerInfo">
-          <h3>Room Name</h3>
-          <p>Last seen at...</p>
+          <h3>{roomName}</h3>
+          <p>
+            Last seen at{' '}
+            {new Date(
+              messages[messages.length - 1]?.timestamp?.toDate()
+            ).toLocaleString()}
+          </p>
         </div>
         <div className="chat__headerRight">
           <IconButton>
@@ -45,11 +106,20 @@ const Chat = () => {
         </div>
       </div>
       <div className="chat__body">
-        <p className="chat__message chat__receiver">
-          <span className="chat__name">Name</span>
-          Message
-          <span className="chat__timestamp">{new Date().toUTCString()}</span>
-        </p>
+        {messages.map((message) => (
+          <p
+            key={message.id}
+            className={`chat__message ${
+              message.name === user?.displayName && 'chat__receiver'
+            }`}
+          >
+            <span className="chat__name">{message.name}</span>
+            {message.message}
+            <span className="chat__timestamp">
+              {message.timestamp?.toDate().toLocaleString()}
+            </span>
+          </p>
+        ))}
       </div>
       <div className="chat__footer">
         <InsertEmoticon />
