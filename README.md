@@ -1,46 +1,30 @@
-# Getting Started with Create React App
+# Whatsapp Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The Goal of the Project is to create an Chat Room application where users can create Public Chat Room and send messages in Real time using Firebase Firestore. Users are authenticated using Firebase Google Authentication
 
-## Available Scripts
+## Tools / Libraries Used
 
-In the project directory, you can run:
+1. create-react-app
+2. TypeScript
+3. Material UI
+4. react-router-dom
+5. firebase
+6. Context APIs
 
-### `npm start`
+## Get Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. Clone the GitHub repository
+   ```bash
+   git clone https://github.com/ojasskapre/whatsapp-clone.git
+   ```
+2. Change directory and install all the packages
+   ```bash
+   cd whatsapp-clone
+   npm install
+   ```
+3. Set up Firestore in a firebase project and copy the firebase config in `firebase.ts`
+4. Enable Authentication in Firebase
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Reference
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- https://www.youtube.com/live/pUxrDcITyjg?si=FLjyq9Q14GyRWNF8
