@@ -28,8 +28,3 @@ The Goal of the Project is to create an Chat Room application where users can cr
 ### Reference
 
 - https://www.youtube.com/live/pUxrDcITyjg?si=FLjyq9Q14GyRWNF8
-
-## TODO:
-
-- [ ] Show List of Users
-- [ ] Allow users to chat privately
